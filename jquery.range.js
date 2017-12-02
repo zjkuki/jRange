@@ -100,7 +100,7 @@
 		attachEvents: function() {
 			this.clickableBar.click($.proxy(this.barClicked, this));
 			this.clickableBar.on("touchstart",$.proxy(this.barTap, this));
-			this.clickableBar.on("touchmove",$.proxy(this.barTap, this));
+			this.pointers.on("touchmove",$.proxy(this.barTap, this));
 			if(this.options.DragEnabled){
 				this.pointers.on('mousedown touchstart', $.proxy(this.onDragStart, this));			
 				this.pointers.bind('dragstart', function(event) {
@@ -154,10 +154,19 @@
 			if(this.options.disable) return;
 			var e=event || window.event;			
 			var x = e.touches[0].clientX - this.clickableBar.offset().left;
-
+						
+				
 			if (this.isSingle()){
-				if(this.options.isMoveByStep){
+				var min, max;
+				min = 0;
+				max = this.domNode.width();
+				
+				if(x<=min){x=min;}
+				if(x>=max){x=max;}
+				
+				if(this.options.isMoveByStep){					
 			    	var val=this.positionToValue(x);
+			    
 			    	//alert('lowPrc:'+this.valuesToPrc(val));
 			    	this.setValue(val);
 			    }else{			    				    
